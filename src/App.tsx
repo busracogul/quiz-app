@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { questions } from "./data/question";
 
 interface Question {
@@ -11,8 +11,38 @@ function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(10);
+
+  const timeoutRef = useRef<number | null>(null);
 
   const currentQuestion: Question = questions[currentIndex];
+
+  useEffect(() => {
+    setTimeLeft(10);
+    setIsAnswered(false);
+    setSelectedOption(null);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      handleTimeout();
+      return;
+    }
+
+    timeoutRef.current = window.setTimeout(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [timeLeft]);
+
+  const nextQuestion = () => {
+    setCurrentIndex((prev) => prev + 1);
+  };
 
   const handleAnswer = (option: string) => {
     if (isAnswered) return;
@@ -21,9 +51,18 @@ function App() {
     setIsAnswered(true);
 
     setTimeout(() => {
-      setCurrentIndex((prev) => prev + 1);
-      setSelectedOption(null);
-      setIsAnswered(false);
+      nextQuestion();
+    }, 1000);
+  };
+
+  const handleTimeout = () => {
+    if (isAnswered) return;
+
+    setIsAnswered(true);
+    setSelectedOption(null);
+
+    setTimeout(() => {
+      nextQuestion();
     }, 1000);
   };
 
@@ -38,15 +77,17 @@ function App() {
 
   return (
     <div className="p-6 max-w-xl mx-auto">
-      <p className="font-bold text-lg text-text1 mb-4">
+      <p className="mb-4 font-semibold bg-secondary border border-warning rounded-full px-5 py-3 inline-block">
+        {timeLeft}
+      </p>
+      <p className="font-bold text-lg text-text1 mb-2">
         {currentIndex + 1}/{questions.length} {currentQuestion.question}
       </p>
 
       <ul className="space-y-2">
         {currentQuestion.options.map((option, i) => {
           let baseClass =
-            "w-full text-left p-3 rounded cursor-pointer transition-colors";
-
+            "w-full text-left p-3 rounded cursor-pointer transition-colors border border-text2 rounded-full pl-6";
           let stateClass = "bg-primary2 hover:bg-text2";
 
           if (isAnswered) {
@@ -64,8 +105,7 @@ function App() {
               <button
                 onClick={() => handleAnswer(option)}
                 disabled={isAnswered}
-                className={`${baseClass} ${stateClass} border border-text2 rounded-full pl-6
-                `}
+                className={`${baseClass} ${stateClass}`}
               >
                 {option}
               </button>
