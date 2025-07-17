@@ -58,19 +58,19 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral p-6">
         <div className="text-center p-8 rounded-xl  border border-neutral  w-full animate-fade-in">
-          <h1 className="text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-correct to-warning mb-2">
+          <p className="text-3xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-correct to-warning mb-2">
             🚀 FrontendQuiz
-          </h1>
-          <p className="text-2xl text-text1 font-semibold mb-4">
+          </p>
+          <p className="text-lg md:text-2xl text-text1 font-semibold mb-4">
             Frontend becerilerini test et!
           </p>
-          <p className="italic text-lg text-text2 mb-2">
+          <p className="italic text-sm md:text-lg text-text2 mb-2">
             Bu test 10 sorudan oluşmaktadır.
           </p>
           <div className="flex items-center justify-center">
             <button
               onClick={() => setIsQuizStarted(true)}
-              className="mt-4 text-2xl flex items-center justify-center gap-2 px-6 py-2 bg-correct hover:bg-green-500 text-text3 font-semibold rounded-full transition duration-300"
+              className="mt-4 text-lg md:text-2xl flex items-center justify-center gap-2 px-6 py-2 bg-correct hover:bg-green-500 text-text3 font-semibold rounded-full transition duration-300"
             >
               🎯 Teste Başla
             </button>
