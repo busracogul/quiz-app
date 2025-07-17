@@ -1,0 +1,37 @@
+# FrontendQuiz
+
+FrontendQuiz, temel frontend bilgilerini test etmek için hazırlanmış 10 soruluk eğlenceli ve interaktif bir quiz uygulamasıdır. React ve TypeScript kullanılarak geliştirilmiştir.
+
+## 🚀 Özellikler
+
+- 📋 10 soruluk frontend testi
+- 🌀 Sorular ve şıklar her seferinde rastgele karıştırılır
+- ⏱ Her soru için 60 saniyelik zamanlayıcı
+- ✅ Doğru / ❌ Yanlış seçeneği tıklanınca anında görsel geri bildirim
+- 📊 Skor ekranı ile sonuç gösterimi
+- 🌈 Responsive ve modern kullanıcı arayüzü (Tailwind CSS ile)
+- 🎨 Soft renk paleti ve dikkat çekici açılış ekranı
+
+## 🛠 Teknolojiler
+
+- React
+- TypeScript
+- Tailwind CSS
+- Vite
+
+## 📸 Ekran Görüntüsü
+
+> Açılış ekranı  
+![Start Screen]()
+
+> Soru ekranı  
+![Quiz Screen]()
+
+> Skor ekranı  
+![Score Screen]()
+
+## 📦 Kurulum
+
+```bash
+pnpm install
+pnpm run dev
