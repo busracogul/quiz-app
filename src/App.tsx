@@ -9,25 +9,39 @@ interface Question {
   correctAnswer: string;
 }
 
+const randomizeQuestions = (questions: Question[]) => {
+  const shuffled = [...questions];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 function App() {
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(10);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [score, setScore] = useState(0);
+  const [isQuizStarted, setIsQuizStarted] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
-  const currentQuestion: Question = questions[currentIndex];
+  useEffect(() => {
+    const shuffled = randomizeQuestions(questions);
+    setShuffledQuestions(shuffled);
+  }, []);
 
   useEffect(() => {
-    setTimeLeft(10);
+    setTimeLeft(60);
     setIsAnswered(false);
     setSelectedOption(null);
   }, [currentIndex]);
 
   useEffect(() => {
-    if (timeLeft === 0) {
-      handleTimeout();
+    if (!isQuizStarted || timeLeft === 0) {
+      if (timeLeft === 0) handleTimeout();
       return;
     }
 
@@ -38,7 +52,35 @@ function App() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [timeLeft]);
+  }, [timeLeft, isQuizStarted]);
+
+  if (!isQuizStarted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-neutral p-6">
+        <div className="text-center p-8 rounded-xl  border border-neutral  w-full animate-fade-in">
+          <h1 className="text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-correct to-warning mb-2">
+            🚀 FrontendQuiz
+          </h1>
+          <p className="text-2xl text-text1 font-semibold mb-4">
+            Frontend becerilerini test et!
+          </p>
+          <p className="italic text-lg text-text2 mb-2">
+            Bu test 10 sorudan oluşmaktadır.
+          </p>
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => setIsQuizStarted(true)}
+              className="mt-4 text-2xl flex items-center justify-center gap-2 px-6 py-2 bg-correct hover:bg-green-500 text-text3 font-semibold rounded-full transition duration-300"
+            >
+              🎯 Teste Başla
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const currentQuestion = shuffledQuestions[currentIndex];
 
   const nextQuestion = () => {
     setCurrentIndex((prev) => prev + 1);
@@ -67,44 +109,52 @@ function App() {
   };
 
   const restartQuiz = () => {
+    setShuffledQuestions(randomizeQuestions(questions));
     setCurrentIndex(0);
     setSelectedOption(null);
     setIsAnswered(false);
-    setTimeLeft(10);
+    setTimeLeft(60);
     setScore(0);
+    setIsQuizStarted(false);
   };
 
-  if (currentIndex >= questions.length) {
+  if (currentIndex >= shuffledQuestions.length) {
     return (
-      <div className="p-6 max-w-xl mx-auto text-center">
-        <h2 className="text-2xl font-bold mb-2 text-primary1">Test Bitti</h2>
-        <p className="text-lg font-semibold text-green-700 mb-4">
-          SKOR: {score} / {questions.length}
-        </p>
+      <div className="min-h-screen flex items-center justify-center bg-neutral p-6">
+        <div className="text-center p-6 rounded-xl">
+          <h2 className="text-4xl font-bold mb-2 text-primary1">
+            Test Bitti 🥳
+          </h2>
+          <p className="text-2xl font-semibold text-green-700 mb-4">
+            SKOR: {score} / {shuffledQuestions.length}
+          </p>
 
-        <button
-          onClick={restartQuiz}
-          className="mt-4 px-6 py-2 bg-correct text-white font-semibold rounded-full transition"
-        >
-          Yeniden Başla
-        </button>
+          <button
+            onClick={restartQuiz}
+            className="mt-4 text-xl px-6 py-2 bg-correct text-white font-semibold rounded-full transition"
+          >
+            Yeniden Başla
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-xl mx-auto">
-      <Timer timeLeft={timeLeft} />
-      <QuestionCard
-        question={currentQuestion.question}
-        options={currentQuestion.options}
-        correctAnswer={currentQuestion.correctAnswer}
-        selectedOption={selectedOption}
-        isAnswered={isAnswered}
-        onAnswer={handleAnswer}
-        currentIndex={currentIndex}
-        totalQuestions={questions.length}
-      />
+    <div className="min-h-screen flex flex-col justify-center items-center bg-neutral p-6">
+      <div className="w-full max-w-xl">
+        <Timer timeLeft={timeLeft} />
+        <QuestionCard
+          question={currentQuestion.question}
+          options={currentQuestion.options}
+          correctAnswer={currentQuestion.correctAnswer}
+          selectedOption={selectedOption}
+          isAnswered={isAnswered}
+          onAnswer={handleAnswer}
+          currentIndex={currentIndex}
+          totalQuestions={shuffledQuestions.length}
+        />
+      </div>
     </div>
   );
 }
