@@ -22,13 +22,13 @@ FrontendQuiz, temel frontend bilgilerini test etmek için hazırlanmış 10 soru
 ## 📸 Ekran Görüntüsü
 
  Açılış ekranı  
-![Start Screen](https://github.com/user-attachments/assets/d36db9e1-8f6f-40ee-8e44-4e0eb781cace)
+![Start Screen](./public/images/acilis-ekrani.png)
 
  Soru ekranı  
-![Quiz Screen](https://github.com/user-attachments/assets/a5490d02-abe4-4e83-b751-b4c351004c6a)
+![Quiz Screen](./public/images/soru-ekrani.png)
 
  Skor ekranı  
-![Score Screen](https://github.com/user-attachments/assets/63e64738-13af-45ea-b4e2-217e1bd44d5d)
+![Score Screen](./public/images/skor-ekrani.png)
 
 ## ⚙️ Kurulum
 
